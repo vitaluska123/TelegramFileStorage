@@ -17,11 +17,11 @@
         </StackPanel>
         <!-- Кнопки действий -->
         <StackPanel Orientation="Horizontal" DockPanel.Dock="Top" Margin="8">
-            <Button Content="Скачать" Margin="0,0,8,0"/>
-            <Button Content="Загрузить" Margin="0,0,8,0"/>
-            <Button Content="Переместить" Margin="0,0,8,0"/>
-            <Button Content="Удалить" Margin="0,0,8,0"/>
-            <Button Content="Настройки"/>
+            <Button Content="Скачать" Margin="0,0,8,0" Command="{Binding DownloadCommand}"/>
+            <Button Content="Загрузить" Margin="0,0,8,0" Command="{Binding UploadCommand}"/>
+            <Button Content="Переместить" Margin="0,0,8,0" Command="{Binding MoveCommand}"/>
+            <Button Content="Удалить" Margin="0,0,8,0" Command="{Binding DeleteCommand}"/>
+            <Button Content="Настройки" Command="{Binding SettingsCommand}"/>
         </StackPanel>
         <!-- Таблица файлов -->
         <DataGrid Items="{Binding Files}" AutoGenerateColumns="False" Margin="8" GridLinesVisibility="All">
