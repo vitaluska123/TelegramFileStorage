@@ -3,7 +3,9 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:vm="clr-namespace:TelegramFileStorage.ViewModels"
+        xmlns:models="clr-namespace:TelegramFileStorage.Models"
         x:Class="Telegram_File_Storage.Views.MainWindow"
+        x:DataType="vm:MainWindowViewModel"
         Title="Telegram File Storage" Width="900" Height="600">
     <Design.DataContext>
         <vm:MainWindowViewModel/>
@@ -23,7 +25,7 @@
             <Button Content="Настройки" Command="{Binding SettingsCommand}"/>
         </StackPanel>
         <!-- Таблица файлов -->
-        <DataGrid Items="{Binding Files}" AutoGenerateColumns="False" Margin="8" GridLinesVisibility="All">
+        <DataGrid ItemsSource="{Binding Files}" AutoGenerateColumns="False" Margin="8" GridLinesVisibility="All" x:DataType="models:FileModel">
             <DataGrid.Columns>
                 <DataGridTextColumn Header="Имя" Binding="{Binding Name}" Width="*"/>
                 <DataGridTextColumn Header="Путь" Binding="{Binding VirtualPath}" Width="2*"/>
