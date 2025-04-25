@@ -1,6 +1,6 @@
+using System;
 using Avalonia.Controls;
 using TelegramFileStorage.ViewModels;
-using ViewModels;
 
 namespace TelegramFileStorage.Views;
 
@@ -9,9 +9,14 @@ public partial class MainWindow : Window
     public MainWindow()
     {
         InitializeComponent();
-        DataContext ??= new ViewModels.MainWindowViewModel();
-        if (DataContext is ViewModels.MainWindowViewModel vm)
+        DataContextChanged += MainWindow_DataContextChanged;
+    }
+
+    private void MainWindow_DataContextChanged(object? sender, EventArgs e)
+    {
+        if (DataContext is TelegramFileStorage.ViewModels.MainWindowViewModel vm)
         {
+            vm.OpenSettingsRequested -= OpenSettingsWindow;
             vm.OpenSettingsRequested += OpenSettingsWindow;
         }
     }

@@ -1,9 +1,27 @@
+using System;
 using System.ComponentModel;
 
 namespace TelegramFileStorage.ViewModels
 {
     public class SettingsViewModel : ViewModelBase
     {
+        public enum SettingsCategory
+        {
+            Main,
+            Telegram,
+            Sync,
+            Upload,
+            Download
+        }
+
+        private SettingsCategory _selectedCategory = SettingsCategory.Main;
+        public SettingsCategory SelectedCategory
+        {
+            get => _selectedCategory;
+            set { _selectedCategory = value; OnPropertyChanged(); }
+        }
+        public SettingsCategory[] Categories { get; } = (SettingsCategory[])Enum.GetValues(typeof(SettingsCategory);
+
         private string _telegramToken;
         public string TelegramToken
         {

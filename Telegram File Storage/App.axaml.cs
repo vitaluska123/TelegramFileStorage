@@ -6,7 +6,6 @@ using System.Linq;
 using Avalonia.Markup.Xaml;
 using TelegramFileStorage.ViewModels;
 using TelegramFileStorage.Views;
-using ViewModels;
 
 namespace TelegramFileStorage;
 
