@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace TelegramFileStorage.Models
+namespace Models
 {
     public class FileModel
     {

@@ -1,0 +1,20 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="clr-namespace:TelegramFileStorage.ViewModels"
+        x:Class="TelegramFileStorage.Views.SettingsWindow"
+        x:DataType="vm:SettingsViewModel"
+        Title="Настройки" Width="400" Height="350">
+    <Design.DataContext>
+        <vm:SettingsViewModel/>
+    </Design.DataContext>
+    <StackPanel Margin="16" Spacing="12">
+        <TextBlock Text="Telegram Token"/>
+        <TextBox Text="{Binding TelegramToken, Mode=TwoWay}"/>
+        <TextBlock Text="Channel ID"/>
+        <TextBox Text="{Binding ChannelId, Mode=TwoWay}"/>
+        <CheckBox Content="Синхронизация включена" IsChecked="{Binding SyncEnabled, Mode=TwoWay}"/>
+        <TextBlock Text="Максимальный размер загрузки (МБ)"/>
+        <TextBox Text="{Binding MaxUploadSize, Mode=TwoWay}"/>
+        <Button Content="Сохранить" HorizontalAlignment="Right" Margin="0,16,0,0"/>
+    </StackPanel>
+</Window>

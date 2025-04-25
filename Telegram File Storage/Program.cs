@@ -1,7 +1,7 @@
 ﻿using Avalonia;
 using System;
 
-namespace Telegram_File_Storage;
+namespace TelegramFileStorage;
 
 sealed class Program
 {

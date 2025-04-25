@@ -1,9 +1,9 @@
 using System;
 using Avalonia.Controls;
 using Avalonia.Controls.Templates;
-using Telegram_File_Storage.ViewModels;
+using TelegramFileStorage.ViewModels;
 
-namespace Telegram_File_Storage;
+namespace TelegramFileStorage;
 
 public class ViewLocator : IDataTemplate
 {

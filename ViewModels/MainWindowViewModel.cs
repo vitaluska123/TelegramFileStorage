@@ -1,7 +1,8 @@
+using System;
 using System.Collections.ObjectModel;
-using TelegramFileStorage.Models;
 using System.Windows.Input;
 using CommunityToolkit.Mvvm.Input;
+using Models;
 
 namespace TelegramFileStorage.ViewModels
 {
@@ -16,6 +17,8 @@ namespace TelegramFileStorage.ViewModels
         public ICommand DeleteCommand { get; }
         public ICommand SettingsCommand { get; }
 
+        public event Action? OpenSettingsRequested;
+
         public MainWindowViewModel()
         {
             DownloadCommand = new RelayCommand(OnDownload);
@@ -23,12 +26,17 @@ namespace TelegramFileStorage.ViewModels
             MoveCommand = new RelayCommand(OnMove);
             DeleteCommand = new RelayCommand(OnDelete);
             SettingsCommand = new RelayCommand(OnSettings);
+
+            // Пример данных для отображения
+            Files.Add(new FileModel { Name = "example.txt", VirtualPath = "/", Size = 12345, Hash = "abc123", IsDeleted = false });
         }
 
-        private void OnDownload() { /* TODO: Реализация скачивания */ }
-        private void OnUpload() { /* TODO: Реализация загрузки */ }
-        private void OnMove() { /* TODO: Реализация перемещения */ }
-        private void OnDelete() { /* TODO: Реализация удаления */ }
-        private void OnSettings() { /* TODO: Открытие настроек */ }
+        private void OnDownload() { }
+        private void OnUpload() { }
+        private void OnMove() { }
+        private void OnDelete() { }
+        private void OnSettings() {
+            OpenSettingsRequested?.Invoke();
+        }
     }
 }

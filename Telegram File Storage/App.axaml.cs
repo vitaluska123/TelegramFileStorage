@@ -4,10 +4,11 @@ using Avalonia.Data.Core;
 using Avalonia.Data.Core.Plugins;
 using System.Linq;
 using Avalonia.Markup.Xaml;
-using Telegram_File_Storage.ViewModels;
-using Telegram_File_Storage.Views;
+using TelegramFileStorage.ViewModels;
+using TelegramFileStorage.Views;
+using ViewModels;
 
-namespace Telegram_File_Storage;
+namespace TelegramFileStorage;
 
 public partial class App : Application
 {

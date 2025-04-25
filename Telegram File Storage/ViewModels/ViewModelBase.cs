@@ -1,7 +1,15 @@
-﻿using CommunityToolkit.Mvvm.ComponentModel;
+using System.ComponentModel;
+using System.Runtime.CompilerServices;
 
-namespace Telegram_File_Storage.ViewModels;
-
-public class ViewModelBase : ObservableObject
+namespace TelegramFileStorage.ViewModels
 {
+    public class ViewModelBase : INotifyPropertyChanged
+    {
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        protected void OnPropertyChanged([CallerMemberName] string propertyName = null)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
+    }
 }
