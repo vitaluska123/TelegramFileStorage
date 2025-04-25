@@ -1,20 +1,36 @@
 <Window xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:vm="using:Telegram_File_Storage.ViewModels"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+        xmlns:vm="clr-namespace:TelegramFileStorage.ViewModels"
         x:Class="Telegram_File_Storage.Views.MainWindow"
-        x:DataType="vm:MainWindowViewModel"
-        Icon="/Assets/avalonia-logo.ico"
-        Title="Telegram_File_Storage">
-
+        Title="Telegram File Storage" Width="900" Height="600">
     <Design.DataContext>
-        <!-- This only sets the DataContext for the previewer in an IDE,
-             to set the actual DataContext for runtime, set the DataContext property in code (look at App.axaml.cs) -->
         <vm:MainWindowViewModel/>
     </Design.DataContext>
-
-    <TextBlock Text="{Binding Greeting}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-
+    <DockPanel>
+        <!-- Адресная строка -->
+        <StackPanel Orientation="Horizontal" DockPanel.Dock="Top" Margin="8">
+            <TextBlock Text="Путь:" VerticalAlignment="Center"/>
+            <TextBox Text="{Binding CurrentPath, Mode=TwoWay}" Width="400" Margin="8,0,0,0"/>
+        </StackPanel>
+        <!-- Кнопки действий -->
+        <StackPanel Orientation="Horizontal" DockPanel.Dock="Top" Margin="8">
+            <Button Content="Скачать" Margin="0,0,8,0" Command="{Binding DownloadCommand}"/>
+            <Button Content="Загрузить" Margin="0,0,8,0" Command="{Binding UploadCommand}"/>
+            <Button Content="Переместить" Margin="0,0,8,0" Command="{Binding MoveCommand}"/>
+            <Button Content="Удалить" Margin="0,0,8,0" Command="{Binding DeleteCommand}"/>
+            <Button Content="Настройки" Command="{Binding SettingsCommand}"/>
+        </StackPanel>
+        <!-- Таблица файлов -->
+        <DataGrid Items="{Binding Files}" AutoGenerateColumns="False" Margin="8" GridLinesVisibility="All">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="Имя" Binding="{Binding Name}" Width="*"/>
+                <DataGridTextColumn Header="Путь" Binding="{Binding VirtualPath}" Width="2*"/>
+                <DataGridTextColumn Header="Размер" Binding="{Binding Size}" Width="*"/>
+                <DataGridTextColumn Header="Хеш" Binding="{Binding Hash}" Width="*"/>
+                <DataGridCheckBoxColumn Header="Удалён" Binding="{Binding IsDeleted}" Width="*"/>
+            </DataGrid.Columns>
+        </DataGrid>
+    </DockPanel>
 </Window>
