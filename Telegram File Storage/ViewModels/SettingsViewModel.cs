@@ -20,7 +20,7 @@ namespace TelegramFileStorage.ViewModels
             get => _selectedCategory;
             set { _selectedCategory = value; OnPropertyChanged(); }
         }
-        public SettingsCategory[] Categories { get; } = (SettingsCategory[])Enum.GetValues(typeof(SettingsCategory);
+        public SettingsCategory[] Categories { get; } = (SettingsCategory[])Enum.GetValues(typeof(SettingsCategory));
 
         private string _telegramToken;
         public string TelegramToken

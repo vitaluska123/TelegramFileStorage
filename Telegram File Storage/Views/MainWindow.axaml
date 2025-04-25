@@ -17,7 +17,7 @@
     </Window.Resources>
     <DockPanel>
         <!-- Кнопки действий -->
-        <StackPanel Orientation="Horizontal" DockPanel.Dock="Top" Margin="8">
+        <StackPanel Orientation="Horizontal" DockPanel.Dock="Top" Margin="8" IsVisible="{Binding CurrentPage, Converter={StaticResource PageTypeToBoolConverter}, ConverterParameter=Files}">
             <Button Content="Скачать" Margin="0,0,8,0" Command="{Binding DownloadCommand}"/>
             <Button Content="Загрузить" Margin="0,0,8,0" Command="{Binding UploadCommand}"/>
             <Button Content="Переместить" Margin="0,0,8,0" Command="{Binding MoveCommand}"/>
@@ -47,47 +47,35 @@
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
             <!-- Карта настроек -->
-            <ListBox Grid.Column="0" Items="{Binding Settings.Categories}" SelectedItem="{Binding Settings.SelectedCategory, Mode=TwoWay}">
+            <ListBox Grid.Column="0" ItemsSource="{Binding Settings.Categories}" SelectedItem="{Binding Settings.SelectedCategory, Mode=TwoWay}" Margin="0,0,0,8">
                 <ListBox.ItemTemplate>
                     <DataTemplate>
                         <TextBlock Text="{Binding}"/>
                     </DataTemplate>
                 </ListBox.ItemTemplate>
             </ListBox>
+            <!-- Кнопка "Назад" по ширине меню -->
+            <Button Grid.Column="0" VerticalAlignment="Bottom" Margin="8,0,8,16" Content="Назад" Command="{Binding ShowFilesPageCommand}" HorizontalAlignment="Stretch"/>
             <!-- Настройки выбранной категории -->
             <StackPanel Grid.Column="1" Margin="16,0,0,0">
-                <ContentControl Content="{Binding Settings.SelectedCategory}">
-                    <ContentControl.DataTemplates>
-                        <DataTemplate DataType="vm:SettingsViewModel+SettingsCategory">
-                            <StackPanel>
-                                <!-- Основные -->
-                                <StackPanel IsVisible="{Binding Settings.SelectedCategory, Converter={StaticResource PageTypeToBoolConverter}, ConverterParameter=Main}">
-                                    <TextBlock Text="Тема, выход, смена пароля (заглушка)"/>
-                                </StackPanel>
-                                <!-- Telegram -->
-                                <StackPanel IsVisible="{Binding Settings.SelectedCategory, Converter={StaticResource PageTypeToBoolConverter}, ConverterParameter=Telegram}">
-                                    <TextBlock Text="Bot Token"/>
-                                    <TextBox Text="{Binding Settings.TelegramToken, Mode=TwoWay}"/>
-                                    <TextBlock Text="Channel ID"/>
-                                    <TextBox Text="{Binding Settings.ChannelId, Mode=TwoWay}"/>
-                                </StackPanel>
-                                <!-- Синхронизация -->
-                                <StackPanel IsVisible="{Binding Settings.SelectedCategory, Converter={StaticResource PageTypeToBoolConverter}, ConverterParameter=Sync}">
-                                    <CheckBox Content="Синхронизация включена" IsChecked="{Binding Settings.SyncEnabled, Mode=TwoWay}"/>
-                                </StackPanel>
-                                <!-- Загрузка -->
-                                <StackPanel IsVisible="{Binding Settings.SelectedCategory, Converter={StaticResource PageTypeToBoolConverter}, ConverterParameter=Upload}">
-                                    <TextBlock Text="Мультипоточная загрузка, количество потоков, ограничение скорости (заглушка)"/>
-                                </StackPanel>
-                                <!-- Скачивание -->
-                                <StackPanel IsVisible="{Binding Settings.SelectedCategory, Converter={StaticResource PageTypeToBoolConverter}, ConverterParameter=Download}">
-                                    <TextBlock Text="Параметры скачивания (заглушка)"/>
-                                </StackPanel>
-                            </StackPanel>
-                        </DataTemplate>
-                    </ContentControl.DataTemplates>
-                </ContentControl>
-                <Button Content="Назад" Command="{Binding ShowFilesPageCommand}" HorizontalAlignment="Right" Margin="0,16,0,0"/>
+                <StackPanel IsVisible="{Binding Settings.SelectedCategory, Converter={StaticResource PageTypeToBoolConverter}, ConverterParameter=Main}">
+                    <TextBlock Text="Тема, выход, смена пароля (заглушка)"/>
+                </StackPanel>
+                <StackPanel IsVisible="{Binding Settings.SelectedCategory, Converter={StaticResource PageTypeToBoolConverter}, ConverterParameter=Telegram}">
+                    <TextBlock Text="Bot Token"/>
+                    <TextBox Text="{Binding Settings.TelegramToken, Mode=TwoWay}"/>
+                    <TextBlock Text="Channel ID"/>
+                    <TextBox Text="{Binding Settings.ChannelId, Mode=TwoWay}"/>
+                </StackPanel>
+                <StackPanel IsVisible="{Binding Settings.SelectedCategory, Converter={StaticResource PageTypeToBoolConverter}, ConverterParameter=Sync}">
+                    <CheckBox Content="Синхронизация включена" IsChecked="{Binding Settings.SyncEnabled, Mode=TwoWay}"/>
+                </StackPanel>
+                <StackPanel IsVisible="{Binding Settings.SelectedCategory, Converter={StaticResource PageTypeToBoolConverter}, ConverterParameter=Upload}">
+                    <TextBlock Text="Мультипоточная загрузка, количество потоков, ограничение скорости (заглушка)"/>
+                </StackPanel>
+                <StackPanel IsVisible="{Binding Settings.SelectedCategory, Converter={StaticResource PageTypeToBoolConverter}, ConverterParameter=Download}">
+                    <TextBlock Text="Параметры скачивания (заглушка)"/>
+                </StackPanel>
             </StackPanel>
         </Grid>
     </DockPanel>
