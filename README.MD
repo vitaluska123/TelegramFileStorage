@@ -90,16 +90,15 @@ Telegram File Storage/
 │   ├── WelcomePageView.axaml.cs   # Code-behind приветствия
 │   ├── NotificationView.axaml     # UI для уведомлений
 │   ├── NotificationView.axaml.cs  # Code-behind уведомлений
-│   ├── Converters/                # Конвертеры для биндинга
-│   │   ├── BoolToThemeConverter.cs
-│   │   ├── IntGreaterThanZeroConverter.cs
-│   │   ├── InverseBooleanConverter.cs
-│   │   ├── NullToBoolConverter.cs
-│   │   ├── NotificationTypeConverters.cs
-│   │   ├── PageTypeToBoolConverter.cs
-│   │   ├── StringToBitmapConverter.cs
-│   │   └── TypeIsNotExplanationConverter.cs
-│   └── Components/                # Переиспользуемые UI-компоненты
+│   └── Converters/                # Конвертеры для биндинга
+│       ├── BoolToThemeConverter.cs
+│       ├── IntGreaterThanZeroConverter.cs
+│       ├── InverseBooleanConverter.cs
+│       ├── NullToBoolConverter.cs
+│       ├── NotificationTypeConverters.cs
+│       ├── PageTypeToBoolConverter.cs
+│       ├── StringToBitmapConverter.cs
+│       └── TypeIsNotExplanationConverter.cs
 ├── Assets/                        # Ресурсы, стили, изображения
 │   ├── avalonia-logo.ico          # Иконка приложения
 │   ├── ColorResources.Dark.axaml  # Цветовая схема (тёмная)
