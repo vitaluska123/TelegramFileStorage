@@ -7,6 +7,7 @@
         xmlns:views="clr-namespace:TelegramFileStorage.Views"
         x:Class="TelegramFileStorage.Views.MainWindow"
         x:DataType="vm:MainWindowViewModel"
+        x:Name="mainWindow"
         Title="Telegram File Storage" Width="900" Height="600">
     <Design.DataContext>
         <vm:MainWindowViewModel/>
@@ -14,69 +15,10 @@
     <Window.Resources>
         <vm:SettingsViewModel x:Key="SettingsVM" />
         <views:PageTypeToBoolConverter x:Key="PageTypeToBoolConverter" />
+        <views:IntGreaterThanZeroConverter x:Key="IntGreaterThanZeroConverter" />
+        <views:InverseBooleanConverter x:Key="InverseBooleanConverter" />
     </Window.Resources>
-    <DockPanel>
-        <!-- Кнопки действий -->
-        <StackPanel Orientation="Horizontal" DockPanel.Dock="Top" Margin="8" IsVisible="{Binding CurrentPage, Converter={StaticResource PageTypeToBoolConverter}, ConverterParameter=Files}">
-            <Button Content="Скачать" Margin="0,0,8,0" Command="{Binding DownloadCommand}"/>
-            <Button Content="Загрузить" Margin="0,0,8,0" Command="{Binding UploadCommand}"/>
-            <Button Content="Переместить" Margin="0,0,8,0" Command="{Binding MoveCommand}"/>
-            <Button Content="Удалить" Margin="0,0,8,0" Command="{Binding DeleteCommand}"/>
-            <Button Content="Настройки" Command="{Binding SettingsCommand}"/>
-        </StackPanel>
-        <!-- Страница файлов -->
-        <StackPanel IsVisible="{Binding CurrentPage, Converter={StaticResource PageTypeToBoolConverter}, ConverterParameter=Files}">
-            <StackPanel Orientation="Horizontal" Margin="8">
-                <TextBlock Text="Путь:" VerticalAlignment="Center"/>
-                <TextBox Text="{Binding CurrentPath, Mode=TwoWay}" Width="400" Margin="8,0,0,0"/>
-            </StackPanel>
-            <DataGrid ItemsSource="{Binding Files}" AutoGenerateColumns="False" Margin="8" GridLinesVisibility="All">
-                <DataGrid.Columns>
-                    <DataGridTextColumn Header="Имя" Binding="{Binding Name}" Width="*"/>
-                    <DataGridTextColumn Header="Путь" Binding="{Binding VirtualPath}" Width="2*"/>
-                    <DataGridTextColumn Header="Размер" Binding="{Binding Size}" Width="*"/>
-                    <DataGridTextColumn Header="Хеш" Binding="{Binding Hash}" Width="*"/>
-                    <DataGridCheckBoxColumn Header="Удалён" Binding="{Binding IsDeleted}" Width="*"/>
-                </DataGrid.Columns>
-            </DataGrid>
-        </StackPanel>
-        <!-- Страница настроек -->
-        <Grid IsVisible="{Binding CurrentPage, Converter={StaticResource PageTypeToBoolConverter}, ConverterParameter=Settings}" Margin="8">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="180"/>
-                <ColumnDefinition Width="*"/>
-            </Grid.ColumnDefinitions>
-            <!-- Карта настроек -->
-            <ListBox Grid.Column="0" ItemsSource="{Binding Settings.Categories}" SelectedItem="{Binding Settings.SelectedCategory, Mode=TwoWay}" Margin="0,0,0,8">
-                <ListBox.ItemTemplate>
-                    <DataTemplate>
-                        <TextBlock Text="{Binding}"/>
-                    </DataTemplate>
-                </ListBox.ItemTemplate>
-            </ListBox>
-            <!-- Кнопка "Назад" по ширине меню -->
-            <Button Grid.Column="0" VerticalAlignment="Bottom" Margin="8,0,8,16" Content="Назад" Command="{Binding ShowFilesPageCommand}" HorizontalAlignment="Stretch"/>
-            <!-- Настройки выбранной категории -->
-            <StackPanel Grid.Column="1" Margin="16,0,0,0">
-                <StackPanel IsVisible="{Binding Settings.SelectedCategory, Converter={StaticResource PageTypeToBoolConverter}, ConverterParameter=Main}">
-                    <TextBlock Text="Тема, выход, смена пароля (заглушка)"/>
-                </StackPanel>
-                <StackPanel IsVisible="{Binding Settings.SelectedCategory, Converter={StaticResource PageTypeToBoolConverter}, ConverterParameter=Telegram}">
-                    <TextBlock Text="Bot Token"/>
-                    <TextBox Text="{Binding Settings.TelegramToken, Mode=TwoWay}"/>
-                    <TextBlock Text="Channel ID"/>
-                    <TextBox Text="{Binding Settings.ChannelId, Mode=TwoWay}"/>
-                </StackPanel>
-                <StackPanel IsVisible="{Binding Settings.SelectedCategory, Converter={StaticResource PageTypeToBoolConverter}, ConverterParameter=Sync}">
-                    <CheckBox Content="Синхронизация включена" IsChecked="{Binding Settings.SyncEnabled, Mode=TwoWay}"/>
-                </StackPanel>
-                <StackPanel IsVisible="{Binding Settings.SelectedCategory, Converter={StaticResource PageTypeToBoolConverter}, ConverterParameter=Upload}">
-                    <TextBlock Text="Мультипоточная загрузка, количество потоков, ограничение скорости (заглушка)"/>
-                </StackPanel>
-                <StackPanel IsVisible="{Binding Settings.SelectedCategory, Converter={StaticResource PageTypeToBoolConverter}, ConverterParameter=Download}">
-                    <TextBlock Text="Параметры скачивания (заглушка)"/>
-                </StackPanel>
-            </StackPanel>
-        </Grid>
-    </DockPanel>
+    <Grid>
+        <ContentControl Content="{Binding CurrentPageVm}" />
+    </Grid>
 </Window>

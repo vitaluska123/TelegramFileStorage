@@ -1,5 +1,6 @@
 using System;
 using System.ComponentModel;
+using System.Windows.Input;
 
 namespace TelegramFileStorage.ViewModels
 {
@@ -49,5 +50,7 @@ namespace TelegramFileStorage.ViewModels
             get => _maxUploadSize;
             set { _maxUploadSize = value; OnPropertyChanged(); }
         }
+
+        public ICommand? ShowFilesPageCommand { get; set; }
     }
 }

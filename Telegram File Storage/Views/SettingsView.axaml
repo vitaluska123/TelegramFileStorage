@@ -1,0 +1,44 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:views="clr-namespace:TelegramFileStorage.Views"
+             xmlns:vm="clr-namespace:TelegramFileStorage.ViewModels"
+             x:Class="TelegramFileStorage.Views.SettingsView"
+             x:DataType="vm:SettingsViewModel">
+    <UserControl.Resources>
+        <views:PageTypeToBoolConverter x:Key="PageTypeToBoolConverter" />
+    </UserControl.Resources>
+    <Grid Margin="8">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="180"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        <ListBox Grid.Column="0" ItemsSource="{Binding Categories}" SelectedItem="{Binding SelectedCategory, Mode=TwoWay}" Margin="0,0,0,8">
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <TextBlock Text="{Binding}"/>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>
+        <Button Grid.Column="0" VerticalAlignment="Bottom" Margin="8,0,8,16" Content="Назад" Command="{Binding ShowFilesPageCommand}" HorizontalAlignment="Stretch"/>
+        <StackPanel Grid.Column="1" Margin="16,0,0,0">
+            <StackPanel IsVisible="{Binding SelectedCategory, Converter={StaticResource PageTypeToBoolConverter}, ConverterParameter=Main}">
+                <TextBlock Text="Тема, выход, смена пароля (заглушка)"/>
+            </StackPanel>
+            <StackPanel IsVisible="{Binding SelectedCategory, Converter={StaticResource PageTypeToBoolConverter}, ConverterParameter=Telegram}">
+                <TextBlock Text="Bot Token"/>
+                <TextBox Text="{Binding TelegramToken, Mode=TwoWay}"/>
+                <TextBlock Text="Channel ID"/>
+                <TextBox Text="{Binding ChannelId, Mode=TwoWay}"/>
+            </StackPanel>
+            <StackPanel IsVisible="{Binding SelectedCategory, Converter={StaticResource PageTypeToBoolConverter}, ConverterParameter=Sync}">
+                <CheckBox Content="Синхронизация включена" IsChecked="{Binding SyncEnabled, Mode=TwoWay}"/>
+            </StackPanel>
+            <StackPanel IsVisible="{Binding SelectedCategory, Converter={StaticResource PageTypeToBoolConverter}, ConverterParameter=Upload}">
+                <TextBlock Text="Мультипоточная загрузка, количество потоков, ограничение скорости (заглушка)"/>
+            </StackPanel>
+            <StackPanel IsVisible="{Binding SelectedCategory, Converter={StaticResource PageTypeToBoolConverter}, ConverterParameter=Download}">
+                <TextBlock Text="Параметры скачивания (заглушка)"/>
+            </StackPanel>
+        </StackPanel>
+    </Grid>
+</UserControl>

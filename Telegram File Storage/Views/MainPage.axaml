@@ -1,0 +1,28 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="clr-namespace:TelegramFileStorage.ViewModels"
+             x:Class="TelegramFileStorage.Views.MainPageView"
+             x:DataType="vm:MainPageViewModel">
+    <StackPanel>
+        <StackPanel Orientation="Horizontal" Margin="8" Spacing="8">
+            <Button Content="Скачать" Command="{Binding DownloadCommand}" />
+            <Button Content="Загрузить" Command="{Binding UploadCommand}" />
+            <Button Content="Переместить" Command="{Binding MoveCommand}" />
+            <Button Content="Удалить" Command="{Binding DeleteCommand}" />
+            <Button Content="Настройки" Command="{Binding SettingsCommand}" />
+        </StackPanel>
+        <StackPanel Orientation="Horizontal" Margin="8">
+            <TextBlock Text="Путь:" VerticalAlignment="Center"/>
+            <TextBox Text="{Binding CurrentPath, Mode=TwoWay}" Width="400" Margin="8,0,0,0"/>
+        </StackPanel>
+        <DataGrid ItemsSource="{Binding Files}" AutoGenerateColumns="False" Margin="8" GridLinesVisibility="All">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="Имя" Binding="{Binding Name}" Width="*"/>
+                <DataGridTextColumn Header="Путь" Binding="{Binding VirtualPath}" Width="2*"/>
+                <DataGridTextColumn Header="Размер" Binding="{Binding Size}" Width="*"/>
+                <DataGridTextColumn Header="Хеш" Binding="{Binding Hash}" Width="*"/>
+                <DataGridCheckBoxColumn Header="Удалён" Binding="{Binding IsDeleted}" Width="*"/>
+            </DataGrid.Columns>
+        </DataGrid>
+    </StackPanel>
+</UserControl>
