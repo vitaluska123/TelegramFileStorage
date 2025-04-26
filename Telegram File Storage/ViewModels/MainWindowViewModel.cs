@@ -22,9 +22,20 @@ namespace TelegramFileStorage.ViewModels
         public MainWindowViewModel()
         {
             SettingsPageViewModel.ShowFilesPageCommand = new RelayCommand(ShowFilesPage);
-            _currentPageVm = WelcomePageViewModel;
-            WelcomePageViewModel.WelcomeFinished += () => CurrentPageVm = MainPageViewModel;
             MainPageViewModel = new MainPageViewModel(OnSettings);
+            WelcomePageViewModel.WelcomeFinished += OnWelcomeFinished;
+            // Показываем приветствие только если WelcomeShown == false
+            if (!SettingsController.Current.WelcomeShown)
+                _currentPageVm = WelcomePageViewModel;
+            else
+                _currentPageVm = MainPageViewModel;
+        }
+
+        private void OnWelcomeFinished()
+        {
+            SettingsController.Current.WelcomeShown = true;
+            SettingsController.Save();
+            CurrentPageVm = MainPageViewModel;
         }
 
         private void OnSettings() {

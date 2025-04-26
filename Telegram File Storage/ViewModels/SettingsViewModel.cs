@@ -19,7 +19,7 @@ namespace TelegramFileStorage.ViewModels
             Download
         }
 
-        private const string SettingsFile = "settings.json";
+        private static readonly string SettingsFile = Path.Combine(AppContext.BaseDirectory, "settings.json");
 
         private SettingsCategory _selectedCategory = SettingsCategory.Main;
         public SettingsCategory SelectedCategory
@@ -125,6 +125,13 @@ namespace TelegramFileStorage.ViewModels
             set { _cardBackground = value; OnPropertyChanged(); }
         }
 
+        private bool _welcomeShown;
+        public bool WelcomeShown
+        {
+            get => _welcomeShown;
+            set { _welcomeShown = value; OnPropertyChanged(); }
+        }
+
         public ICommand? ShowFilesPageCommand { get; set; }
         public ICommand SaveTelegramCommand { get; set; }
         public ICommand SaveSyncCommand { get; set; }
@@ -143,36 +150,8 @@ namespace TelegramFileStorage.ViewModels
             ChangeThemeCommand = new RelayCommand(() => { SaveSettings(); ApplyTheme(); });
             ChangePasswordCommand = new RelayCommand(() => { /* TODO: Реализовать смену пароля */ });
             LogoutCommand = new RelayCommand(() => { /* TODO: Реализовать выход */ });
-            LoadSettings();
-            ThemeIndex = IsDarkTheme ? 1 : 0;
-            SetCardBackgroundByTheme();
-        }
-
-        public void SaveSettings()
-        {
-            var model = new SettingsModel
-            {
-                IsDarkTheme = ThemeIndex == 1,
-                TelegramToken = TelegramToken,
-                ChannelId = ChannelId,
-                SyncEnabled = SyncEnabled,
-                MultiUploadEnabled = MultiUploadEnabled,
-                UploadThreads = UploadThreads,
-                UploadSpeedLimit = UploadSpeedLimit,
-                MultiDownloadEnabled = MultiDownloadEnabled,
-                DownloadThreads = DownloadThreads,
-                DownloadSpeedLimit = DownloadSpeedLimit
-            };
-            var json = JsonSerializer.Serialize(model, new JsonSerializerOptions { WriteIndented = true });
-            File.WriteAllText(SettingsFile, json);
-        }
-
-        public void LoadSettings()
-        {
-            if (!File.Exists(SettingsFile)) return;
-            var json = File.ReadAllText(SettingsFile);
-            var model = JsonSerializer.Deserialize<SettingsModel>(json);
-            if (model == null) return;
+            // Инициализация свойств из SettingsController
+            var model = SettingsController.Current;
             IsDarkTheme = model.IsDarkTheme;
             TelegramToken = model.TelegramToken;
             ChannelId = model.ChannelId;
@@ -184,7 +163,27 @@ namespace TelegramFileStorage.ViewModels
             DownloadThreads = model.DownloadThreads;
             DownloadSpeedLimit = model.DownloadSpeedLimit;
             ThemeIndex = model.IsDarkTheme ? 1 : 0;
+            WelcomeShown = model.WelcomeShown;
         }
+
+        public void SaveSettings()
+        {
+            var model = SettingsController.Current;
+            model.IsDarkTheme = ThemeIndex == 1;
+            model.TelegramToken = TelegramToken;
+            model.ChannelId = ChannelId;
+            model.SyncEnabled = SyncEnabled;
+            model.MultiUploadEnabled = MultiUploadEnabled;
+            model.UploadThreads = UploadThreads;
+            model.UploadSpeedLimit = UploadSpeedLimit;
+            model.MultiDownloadEnabled = MultiDownloadEnabled;
+            model.DownloadThreads = DownloadThreads;
+            model.DownloadSpeedLimit = DownloadSpeedLimit;
+            model.WelcomeShown = WelcomeShown;
+            SettingsController.Save();
+        }
+
+        public void LoadSettings() { /* больше не нужен, всё через SettingsController */ }
 
         private void SetCardBackgroundByTheme()
         {

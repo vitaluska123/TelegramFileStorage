@@ -14,5 +14,6 @@ namespace TelegramFileStorage.Models
         public bool MultiDownloadEnabled { get; set; }
         public int DownloadThreads { get; set; } = 1;
         public int DownloadSpeedLimit { get; set; }
+        public bool WelcomeShown { get; set; }
     }
 }
