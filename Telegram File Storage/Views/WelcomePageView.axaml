@@ -8,20 +8,13 @@
         <views:IntGreaterThanZeroConverter x:Key="IntGreaterThanZeroConverter" />
     </UserControl.Resources>
     <Grid Background="#222">
-        <TextBlock Text="{Binding CurrentWelcomeSlide}" 
-                   FontSize="16" 
-                   FontWeight="Normal" 
-                   TextAlignment="Center" 
-                   Foreground="White"
-                   Margin="48,48,48,80"
-                   VerticalAlignment="Center"
-                   HorizontalAlignment="Center"
-                   TextWrapping="Wrap"/>
-        <StackPanel Orientation="Horizontal" 
-                    HorizontalAlignment="Right" 
-                    VerticalAlignment="Bottom" 
-                    Margin="0,0,32,32"
-                    Spacing="8">
+        <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center" Margin="48,48,48,80" Width="600">
+            <TextBlock Text="{Binding CurrentSlide.Title}" FontSize="20" FontWeight="Bold" Foreground="White" TextAlignment="Center" Margin="0,0,0,12"/>
+            <Image Source="{Binding CurrentSlide.ImagePath}" Height="120" Stretch="Uniform" Margin="0,0,0,12" IsVisible="{Binding CurrentSlide.ImagePath, Converter={x:Static views:NullToBoolConverter.Instance}}"/>
+            <TextBlock Text="{Binding CurrentSlide.Text}" FontSize="14" Foreground="White" TextAlignment="Center" TextWrapping="Wrap"/>
+        </StackPanel>
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0,0,32,32" Spacing="8">
+            <Button Content="Пропустить" Command="{Binding SkipWelcomeCommand}" IsVisible="{Binding CurrentSlide.ShowSkip}"/>
             <Button Content="Назад" Command="{Binding PrevWelcomeCommand}" IsEnabled="{Binding WelcomeIndex, Converter={StaticResource IntGreaterThanZeroConverter}}"/>
             <Button Content="Далее" Command="{Binding NextWelcomeCommand}"/>
         </StackPanel>
