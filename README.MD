@@ -63,6 +63,72 @@
 
 Avalonia MVVM проект для отображения файловой структуры (файлы и папки), скачивания и загрузки файлов с Telegram-канала.
 
+### Структура клиентской части
+
+```
+Telegram File Storage/
+├── Models/                        # Модели данных
+│   ├── FileModel.cs               # Описание файла/папки (имя, путь, размер, хеш, fileIds и др.)
+│   └── SettingsModel.cs           # Модель пользовательских настроек
+├── ViewModels/                    # ViewModel для MVVM
+│   ├── MainWindowViewModel.cs     # Главная VM, навигация и состояние приложения
+│   ├── SettingsViewModel.cs       # VM для страницы настроек
+│   ├── WelcomePageViewModel.cs    # VM для приветствия и онбординга
+│   ├── NotificationViewModel.cs   # VM для уведомлений
+│   ├── NotificationModel.cs       # Модель уведомления
+│   └── ViewModelBase.cs           # Базовый класс для VM
+├── Views/                         # XAML и code-behind для UI
+│   ├── MainWindow.axaml           # Главное окно
+│   ├── MainWindow.axaml.cs        # Code-behind главного окна
+│   ├── MainPage.axaml             # Страница файловой структуры
+│   ├── MainPage.axaml.cs          # Code-behind страницы файлов
+│   ├── SettingsView.axaml         # Страница настроек
+│   ├── SettingsView.axaml.cs      # Code-behind настроек
+│   ├── SettingsWindow.axaml       # Окно настроек (если отдельное)
+│   ├── SettingsWindow.axaml.cs    # Code-behind окна настроек
+│   ├── WelcomePageView.axaml      # Приветственная страница
+│   ├── WelcomePageView.axaml.cs   # Code-behind приветствия
+│   ├── NotificationView.axaml     # UI для уведомлений
+│   ├── NotificationView.axaml.cs  # Code-behind уведомлений
+│   ├── Converters/                # Конвертеры для биндинга
+│   │   ├── BoolToThemeConverter.cs
+│   │   ├── IntGreaterThanZeroConverter.cs
+│   │   ├── InverseBooleanConverter.cs
+│   │   ├── NullToBoolConverter.cs
+│   │   ├── NotificationTypeConverters.cs
+│   │   ├── PageTypeToBoolConverter.cs
+│   │   ├── StringToBitmapConverter.cs
+│   │   └── TypeIsNotExplanationConverter.cs
+│   └── Components/                # Переиспользуемые UI-компоненты
+├── Assets/                        # Ресурсы, стили, изображения
+│   ├── avalonia-logo.ico          # Иконка приложения
+│   ├── ColorResources.Dark.axaml  # Цветовая схема (тёмная)
+│   ├── ColorResources.Light.axaml # Цветовая схема (светлая)
+│   ├── Slides.xml                 # Описание слайдов приветствия
+│   ├── SlidesImages/              # Картинки для слайдов
+│   │   └── testslide.png
+│   └── Styles/                    # Стили оформления
+├── ApiController.cs               # Взаимодействие с сервером и Telegram API
+├── SettingsController.cs          # Управление настройками пользователя
+├── Program.cs                     # Точка входа
+├── App.axaml, App.axaml.cs        # Конфигурация приложения
+├── ViewLocator.cs                 # Локатор View для ViewModel
+├── app.manifest                   # Манифест приложения
+├── TelegramFileStorage.csproj     # Файл проекта
+└── ...                            # Прочие служебные и инфраструктурные файлы
+```
+
+- **Models/** — классы для представления данных (файлы, настройки, уведомления и др.)
+- **ViewModels/** — логика отображения и взаимодействия для MVVM.
+- **Views/** — XAML-описания, code-behind и конвертеры для UI.
+- **Assets/** — ресурсы, темы, изображения, стили.
+- **ApiController.cs** — взаимодействие с сервером и Telegram API.
+- **SettingsController.cs** — управление настройками пользователя.
+- **Program.cs, App.axaml** — запуск и конфигурация приложения.
+- **ViewLocator.cs** — связывание View и ViewModel.
+- **app.manifest** — манифест приложения.
+- **TelegramFileStorage.csproj** — файл проекта.
+
 ### Основные страницы
 
 #### 1. Основная
