@@ -1,0 +1,29 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:views="clr-namespace:TelegramFileStorage.Views"
+             xmlns:vm="clr-namespace:TelegramFileStorage.ViewModels"
+             x:Class="TelegramFileStorage.Views.NotificationView"
+             x:DataType="vm:NotificationViewModel">
+    <UserControl.Resources>
+        <views:NotificationTypeToBrushConverter x:Key="NotificationTypeToBrushConverter" />
+        <views:NotificationTypeIsLoadingConverter x:Key="NotificationTypeIsLoadingConverter" />
+        <views:NotificationTypeIsAcceptConverter x:Key="NotificationTypeIsAcceptConverter" />
+    </UserControl.Resources>
+    <Border IsVisible="{Binding IsVisible}"
+            Background="#CC222222" CornerRadius="8" Padding="16" Margin="32,16,32,0"
+            HorizontalAlignment="Stretch" VerticalAlignment="Top"
+            BorderThickness="2"
+            BorderBrush="{Binding Notification.Type, Converter={StaticResource NotificationTypeToBrushConverter}}"
+            ZIndex="100">
+        <StackPanel>
+            <TextBlock Text="{Binding Notification.Message}" Foreground="White" FontWeight="Bold" FontSize="16"/>
+            <ProgressBar Minimum="0" Maximum="100" Value="{Binding Notification.Progress}" Height="8" Margin="0,8,0,0"
+                         IsVisible="{Binding Notification.Type, Converter={StaticResource NotificationTypeIsLoadingConverter}}"/>
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Spacing="8"
+                        IsVisible="{Binding Notification.Type, Converter={StaticResource NotificationTypeIsAcceptConverter}}">
+                <Button Content="{Binding Notification.AcceptText}" Command="{Binding AcceptCommand}"/>
+                <Button Content="{Binding Notification.CancelText}" Command="{Binding CancelCommand}"/>
+            </StackPanel>
+        </StackPanel>
+    </Border>
+</UserControl>

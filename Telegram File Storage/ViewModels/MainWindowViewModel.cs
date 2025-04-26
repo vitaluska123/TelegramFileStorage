@@ -11,6 +11,7 @@ namespace TelegramFileStorage.ViewModels
         public MainPageViewModel MainPageViewModel { get; }
         public SettingsViewModel SettingsPageViewModel { get; } = new SettingsViewModel();
         public WelcomePageViewModel WelcomePageViewModel { get; } = new WelcomePageViewModel();
+        public NotificationViewModel NotificationVM { get; } = new NotificationViewModel();
 
         private ViewModelBase _currentPageVm;
         public ViewModelBase CurrentPageVm
@@ -43,6 +44,12 @@ namespace TelegramFileStorage.ViewModels
         }
         public void ShowFilesPage() {
             CurrentPageVm = MainPageViewModel;
+        }
+
+        // Пример метода для показа уведомления
+        public void ShowNotification(NotificationModel model, Action? onAccept = null, Action? onCancel = null)
+        {
+            NotificationVM.Show(model, onAccept, onCancel);
         }
     }
 

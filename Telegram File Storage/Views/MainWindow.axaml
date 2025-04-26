@@ -17,8 +17,12 @@
         <views:PageTypeToBoolConverter x:Key="PageTypeToBoolConverter" />
         <views:IntGreaterThanZeroConverter x:Key="IntGreaterThanZeroConverter" />
         <views:InverseBooleanConverter x:Key="InverseBooleanConverter" />
+        <views:NotificationTypeToBrushConverter x:Key="NotificationTypeToBrushConverter" />
+        <views:NotificationTypeIsLoadingConverter x:Key="NotificationTypeIsLoadingConverter" />
+        <views:NotificationTypeIsAcceptConverter x:Key="NotificationTypeIsAcceptConverter" />
     </Window.Resources>
     <Grid>
         <ContentControl Content="{Binding CurrentPageVm}" />
+        <views:NotificationView DataContext="{Binding NotificationVM}" />
     </Grid>
 </Window>

@@ -41,7 +41,8 @@
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>
                         <TextBox Margin="0,8,0,0"
-                                 Watermark="{Binding Placeholder}"/>
+                                 Watermark="{Binding Placeholder}"
+                                 Text="{Binding Value, Mode=TwoWay}"/>
                     </DataTemplate>
                 </ItemsControl.ItemTemplate>
             </ItemsControl>

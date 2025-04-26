@@ -9,11 +9,25 @@ using System.Linq;
 
 namespace TelegramFileStorage.ViewModels
 {
-    public class InputField
+    public class InputField : INotifyPropertyChanged
     {
         public string Type { get; set; } = string.Empty;
         public string Key { get; set; } = string.Empty;
         public string Placeholder { get; set; } = string.Empty;
+        private string _value = string.Empty;
+        public string Value
+        {
+            get => _value;
+            set
+            {
+                if (_value != value)
+                {
+                    _value = value;
+                    PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Value)));
+                }
+            }
+        }
+        public event PropertyChangedEventHandler? PropertyChanged;
     }
 
     public class Slide
@@ -58,7 +72,7 @@ namespace TelegramFileStorage.ViewModels
         public Slide? CurrentSlide => Slides.Count > 0 && WelcomeIndex >= 0 && WelcomeIndex < Slides.Count ? Slides[WelcomeIndex] : null;
         public bool CanGoNext =>
             (CurrentSlide?.Id != "agreement" || AgreementAccepted)
-            && (!(CurrentSlide?.InputFields.Count > 0) || AgreementAccepted)
+            && (!(CurrentSlide?.InputFields.Count > 0) || AllInputFieldsFilled())
             && !(CurrentSlide?.NextSlide == null)
             && !(CurrentSlide?.IsExplanation == true);
         private bool _agreementAccepted;
@@ -89,7 +103,15 @@ namespace TelegramFileStorage.ViewModels
             get => _password;
             set { _password = value; OnPropertyChanged(); }
         }
-        public ICommand NextWelcomeCommand => new RelayCommand(NextWelcome);
+        private string? _errorMessage;
+        public string? ErrorMessage
+        {
+            get => _errorMessage;
+            set { _errorMessage = value; OnPropertyChanged(); }
+        }
+        // Значения всех InputField по ключу
+        public Dictionary<string, string> InputValues { get; } = new();
+        public ICommand NextWelcomeCommand => new AsyncRelayCommand(NextWelcomeAsync);
         public ICommand PrevWelcomeCommand => new RelayCommand(PrevWelcome);
         public ICommand SkipWelcomeCommand => new RelayCommand(SkipWelcome);
         public ICommand LoginCommand => new RelayCommand(() => OnAuth("login_start"));
@@ -104,6 +126,8 @@ namespace TelegramFileStorage.ViewModels
         public WelcomePageViewModel()
         {
             LoadSlidesFromXml();
+            Slides.CollectionChanged += (s, e) => SubscribeInputFields();
+            SubscribeInputFields();
         }
 
         private void LoadSlidesFromXml()
@@ -169,11 +193,87 @@ namespace TelegramFileStorage.ViewModels
                 Slides.Add(s);
         }
 
-        private void NextWelcome()
+        private void SubscribeInputFields()
         {
+            foreach (var slide in Slides)
+            {
+                foreach (var field in slide.InputFields)
+                {
+                    field.PropertyChanged -= InputField_PropertyChanged;
+                    field.PropertyChanged += InputField_PropertyChanged;
+                }
+            }
+        }
+
+        private void InputField_PropertyChanged(object? sender, PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName == nameof(InputField.Value))
+            {
+                OnPropertyChanged(nameof(CanGoNext));
+            }
+        }
+
+        private void SyncInputFieldValuesToDictionary()
+        {
+            if (CurrentSlide?.InputFields != null)
+            {
+                foreach (var field in CurrentSlide.InputFields)
+                {
+                    InputValues[field.Key] = field.Value;
+                }
+            }
+        }
+
+        private async System.Threading.Tasks.Task NextWelcomeAsync()
+        {
+            ErrorMessage = null;
+            SyncInputFieldValuesToDictionary();
             if (CurrentSlide != null)
-                if (CurrentSlide != null)
-                    _slideHistory.Push(CurrentSlide.Id);
+                _slideHistory.Push(CurrentSlide.Id);
+
+            // Авторизация
+            if (CurrentSlide?.Id == "login")
+            {
+                var login = InputValues.TryGetValue("Login", out var l) ? l : null;
+                var password = InputValues.TryGetValue("Password", out var p) ? p : null;
+                if (string.IsNullOrWhiteSpace(login) || string.IsNullOrWhiteSpace(password))
+                {
+                    ErrorMessage = "Введите логин и пароль";
+                    ShowNotification(new NotificationModel { Type = NotificationType.Error, Message = "Введите логин и пароль" });
+                    return;
+                }
+                bool success = await AuthorizeAsync(login, password);
+                if (!success)
+                {
+                    ErrorMessage = "Неверный логин или пароль";
+                    ShowNotification(new NotificationModel { Type = NotificationType.Error, Message = "Неверный логин или пароль" });
+                    return;
+                }
+                else
+                {
+                    ShowNotification(new NotificationModel { Type = NotificationType.Success, Message = "Успешная авторизация!" });
+                }
+            }
+            // Сохранение токена бота
+            if (CurrentSlide?.Id == "bot_token")
+            {
+                var token = InputValues.TryGetValue("BotToken", out var t) ? t : null;
+                if (!string.IsNullOrWhiteSpace(token))
+                {
+                    SettingsController.Current.TelegramToken = token;
+                    SettingsController.Save();
+                }
+            }
+            // Сохранение ChannelId
+            if (CurrentSlide?.Id == "channel_id")
+            {
+                var channelId = InputValues.TryGetValue("ChannelId", out var c) ? c : null;
+                if (!string.IsNullOrWhiteSpace(channelId))
+                {
+                    SettingsController.Current.ChannelId = channelId;
+                    SettingsController.Save();
+                }
+            }
             var nextId = CurrentSlide?.NextSlide;
             if (!string.IsNullOrEmpty(nextId) && _slideMap.TryGetValue(nextId, out var nextSlide))
             {
@@ -188,6 +288,12 @@ namespace TelegramFileStorage.ViewModels
                 WelcomeFinished?.Invoke();
             }
         }
+
+        private async System.Threading.Tasks.Task<bool> AuthorizeAsync(string login, string password)
+        {
+            return await ApiController.AuthorizeAsync(login, password);
+        }
+
         private void PrevWelcome()
         {
             if (_slideHistory.Count > 0)
@@ -251,6 +357,30 @@ namespace TelegramFileStorage.ViewModels
                 if (CurrentSlide != null)
                 _slideHistory.Push(CurrentSlide.Id);
                 WelcomeIndex = Slides.IndexOf(explSlide);
+            }
+        }
+        private bool AllInputFieldsFilled()
+        {
+            if (CurrentSlide?.InputFields == null || CurrentSlide.InputFields.Count == 0)
+                return true;
+            foreach (var field in CurrentSlide.InputFields)
+            {
+                if (string.IsNullOrWhiteSpace(field.Value))
+                    return false;
+            }
+            return true;
+        }
+
+        // Показывает уведомление через MainWindowViewModel, если он есть в DataContext главного окна
+        private void ShowNotification(NotificationModel model)
+        {
+            var app = Avalonia.Application.Current;
+            if (app?.ApplicationLifetime is Avalonia.Controls.ApplicationLifetimes.IClassicDesktopStyleApplicationLifetime desktop)
+            {
+                if (desktop.MainWindow?.DataContext is MainWindowViewModel mainVM)
+                {
+                    mainVM.ShowNotification(model);
+                }
             }
         }
     }
