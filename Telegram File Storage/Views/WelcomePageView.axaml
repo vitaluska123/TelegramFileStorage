@@ -6,17 +6,64 @@
              x:DataType="vm:WelcomePageViewModel">
     <UserControl.Resources>
         <views:IntGreaterThanZeroConverter x:Key="IntGreaterThanZeroConverter" />
+        <views:PageTypeToBoolConverter x:Key="PageTypeToBoolConverter" />
+        <views:NullToBoolConverter x:Key="NullToBoolConverter" />
+        <views:TypeIsNotExplanationConverter x:Key="TypeIsNotExplanationConverter" />
+        <views:StringToBitmapConverter x:Key="StringToBitmapConverter" />
     </UserControl.Resources>
-    <Grid Background="#222">
+    <Grid>
+        <Grid.Background>
+            <SolidColorBrush Color="#222"/>
+        </Grid.Background>
+        <!-- Кнопка вопроса -->
+        <Button Content="?" Width="32" Height="32" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="16"
+                IsVisible="{Binding CurrentSlide.Explanations.Count, Converter={StaticResource IntGreaterThanZeroConverter}}"
+                Command="{Binding ShowExplanationCommand}"/>
         <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center" Margin="48,48,48,80" Width="600">
-            <TextBlock Text="{Binding CurrentSlide.Title}" FontSize="20" FontWeight="Bold" Foreground="White" TextAlignment="Center" Margin="0,0,0,12"/>
-            <Image Source="{Binding CurrentSlide.ImagePath}" Height="120" Stretch="Uniform" Margin="0,0,0,12" IsVisible="{Binding CurrentSlide.ImagePath, Converter={x:Static views:NullToBoolConverter.Instance}}"/>
-            <TextBlock Text="{Binding CurrentSlide.Text}" FontSize="14" Foreground="White" TextAlignment="Center" TextWrapping="Wrap"/>
+            <!-- Заголовок -->
+            <TextBlock Text="{Binding CurrentSlide.Title}" FontSize="20" FontWeight="Bold" Foreground="White" TextAlignment="Center" Margin="0,0,0,12"
+                       IsVisible="{Binding CurrentSlide.Title, Converter={StaticResource NullToBoolConverter}}"/>
+            <!-- Картинка на весь слайд (кроме заголовка и кнопок) -->
+            <Grid Height="360" VerticalAlignment="Center" Margin="0,0,0,12"
+                  IsVisible="{Binding CurrentSlide.ImagePath, Converter={StaticResource NullToBoolConverter}}">
+                <Image Source="{Binding CurrentSlide.ImagePath, Converter={StaticResource StringToBitmapConverter}}"
+                       Stretch="Uniform" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+            </Grid>
+            <!-- Текст -->
+            <TextBlock Text="{Binding CurrentSlide.Text}" FontSize="14" Foreground="White" TextAlignment="Center" TextWrapping="Wrap" Margin="0,0,0,12"
+                       IsVisible="{Binding CurrentSlide.Text, Converter={StaticResource NullToBoolConverter}}"/>
+            <!-- Agreement checkbox -->
+            <CheckBox Content="Я принимаю условия" Margin="0,16,0,0"
+                      IsVisible="{Binding CurrentSlide.ShowAgreement}"
+                      IsChecked="{Binding AgreementAccepted, Mode=TwoWay}"/>
+            <!-- Поля ввода из InputFields -->
+            <ItemsControl ItemsSource="{Binding CurrentSlide.InputFields}">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <TextBox Margin="0,8,0,0"
+                                 Watermark="{Binding Placeholder}"/>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+            <!-- Поля ввода логина/пароля -->
+            <TextBox Watermark="Логин" Text="{Binding Login, Mode=TwoWay}" Margin="0,16,0,0"
+                     IsVisible="{Binding CurrentSlide.ShowInput}"/>
+            <TextBox Watermark="Пароль" Text="{Binding Password, Mode=TwoWay}" Margin="0,8,0,0"
+                     IsVisible="{Binding CurrentSlide.ShowInput}"/>
+            <!-- Auth buttons -->
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,16,0,0" Spacing="12"
+                        IsVisible="{Binding CurrentSlide.ShowAuthButtons}">
+                <Button Content="Войти" Command="{Binding LoginCommand}"/>
+                <Button Content="Зарегистрироваться" Command="{Binding RegisterCommand}"/>
+                <Button Content="Без синхронизации" Command="{Binding NoSyncCommand}"/>
+            </StackPanel>
+            <Button Content="Завершить" Command="{Binding SkipWelcomeCommand}" Margin="0,16,0,0" HorizontalAlignment="Center"
+                    IsVisible="{Binding CurrentSlide.ShowFinishButton}"/>
         </StackPanel>
         <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0,0,32,32" Spacing="8">
             <Button Content="Пропустить" Command="{Binding SkipWelcomeCommand}" IsVisible="{Binding CurrentSlide.ShowSkip}"/>
             <Button Content="Назад" Command="{Binding PrevWelcomeCommand}" IsEnabled="{Binding WelcomeIndex, Converter={StaticResource IntGreaterThanZeroConverter}}"/>
-            <Button Content="Далее" Command="{Binding NextWelcomeCommand}"/>
+            <Button Content="Далее" Command="{Binding NextWelcomeCommand}" IsEnabled="{Binding CanGoNext}" IsVisible="{Binding CurrentSlide.Type, Converter={StaticResource TypeIsNotExplanationConverter}}"/>
         </StackPanel>
     </Grid>
 </UserControl>

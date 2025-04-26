@@ -1,0 +1,12 @@
+{
+  "IsDarkTheme": true,
+  "TelegramToken": null,
+  "ChannelId": null,
+  "SyncEnabled": false,
+  "MultiUploadEnabled": false,
+  "UploadThreads": 1,
+  "UploadSpeedLimit": 0,
+  "MultiDownloadEnabled": false,
+  "DownloadThreads": 1,
+  "DownloadSpeedLimit": 0
+}

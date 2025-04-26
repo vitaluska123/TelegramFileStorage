@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Slides>
+  <Slide id="welcome">
+    <Title>Добро пожаловать!</Title>
+    <Text>Это приветственный слайд. Нажмите далее, чтобы продолжить.</Text>
+    <NextSlide>agreement</NextSlide>
+  </Slide>
+  <Slide id="agreement">
+    <Title>Пользовательское соглашение</Title>
+    <Text>Пожалуйста, ознакомьтесь с условиями использования и примите соглашение для продолжения.</Text>
+    <ShowAgreement>true</ShowAgreement>
+    <NextSlide>auth_choice</NextSlide>
+  </Slide>
+  <Slide id="auth_choice">
+    <Title>Вход или регистрация</Title>
+    <Text>Выберите способ продолжения:</Text>
+    <LoginSlideId>login</LoginSlideId>
+    <RegisterSlideId>register</RegisterSlideId>
+    <NoSyncSlideId>bot_token</NoSyncSlideId>
+
+    <ShowAuthButtons>true</ShowAuthButtons>
+    <ShowSkip>false</ShowSkip>
+  </Slide>
+  <Slide id="login">
+    <Title>Вход</Title>
+    <Text>Пожалуйста, введите логин и пароль.</Text>
+    <InputFields>
+      <InputField type="text" key="Login" placeholder="Логин" />
+      <InputField type="password" key="Password" placeholder="Пароль" />
+    </InputFields>
+    <Explanations>
+      <ExplanationSlideId>login_help</ExplanationSlideId>
+    </Explanations>
+    <NextSlide>finish</NextSlide>
+  </Slide>
+  <Slide id="login_help" type="explanation">
+    <Title>Помощь по входу</Title>
+    <Text>Если вы забыли пароль, воспользуйтесь функцией восстановления или обратитесь в поддержку.</Text>
+  </Slide>
+  <Slide id="register">
+    <Title>Регистрация</Title>
+    <Text>Создайте новый аккаунт.</Text>
+    <InputFields>
+      <InputField type="text" key="Login" placeholder="Логин" />
+      <InputField type="password" key="Password" placeholder="Пароль" />
+    </InputFields>
+    <Explanations>
+      <ExplanationSlideId>register_help</ExplanationSlideId>
+    </Explanations>
+    <NextSlide>bot_token</NextSlide>
+  </Slide>
+  <Slide id="register_help" type="explanation">
+    <Title>Помощь по регистрации</Title>
+    <Text>Придумайте уникальный логин и надежный пароль. Не используйте простые комбинации.</Text>
+  </Slide>
+  <Slide id="bot_token">
+    <Title>Добавление Telegram-бота</Title>
+    <Text>Введите токен вашего Telegram-бота для интеграции.</Text>
+    <InputFields>
+      <InputField type="text" key="BotToken" placeholder="Bot Token" />
+    </InputFields>
+    <Explanations>
+      <ExplanationSlideId>bot_info</ExplanationSlideId>
+    </Explanations>
+    <NextSlide>channel_id</NextSlide>
+  </Slide>
+  <Slide id="bot_info">
+    <Title>Как создать Telegram-бота</Title>
+    <Text>Инструкция по созданию бота через @BotFather. Скопируйте токен и вставьте на предыдущем шаге.</Text>
+    <NextSlide>channel_id</NextSlide>
+  </Slide>
+  <Slide id="channel_id">
+    <Title>Добавление канала</Title>
+    <Text>Введите ID вашего Telegram-канала (например, -100XXXXXXXXXX).</Text>
+    <InputFields>
+      <InputField type="text" key="ChannelId" placeholder="Channel ID" />
+    </InputFields>
+    <Explanations>
+      <ExplanationSlideId>channel_id_help</ExplanationSlideId>
+    </Explanations>
+    <NextSlide>invite_bot</NextSlide>
+  </Slide>
+  <Slide id="channel_id_help">
+    <Title>Как получить ID канала</Title>
+    <Text>1. Через @userinfobot
+2. Через web-версию Telegram (в URL канала).</Text>
+    <NextSlide>invite_bot</NextSlide>
+  </Slide>
+  <Slide id="invite_bot">
+    <Title>Приглашение бота в канал</Title>
+    <Text>Добавьте бота в канал и дайте ему права администратора для загрузки файлов.</Text>
+    <NextSlide>manual</NextSlide>
+  </Slide>
+
+  <Slide id="manual">
+    <Title>Краткая инструкция</Title>
+    <Image>testslide.png</Image>
+    <NextSlide>finish</NextSlide>
+  </Slide>
+
+  <Slide id="finish">
+    <Title>Готово!</Title>
+    <Text>Вы успешно прошли все шаги.</Text>
+    <ShowFinishButton>true</ShowFinishButton>
+  </Slide>
+</Slides>

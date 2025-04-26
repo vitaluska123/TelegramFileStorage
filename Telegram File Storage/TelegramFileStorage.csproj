@@ -31,4 +31,8 @@
         <DependentUpon>SettingsView.axaml</DependentUpon>
       </Compile>
     </ItemGroup>
+
+    <ItemGroup>
+        <EmbeddedResource Include="Assets\Slides.xml" />
+    </ItemGroup>
 </Project>

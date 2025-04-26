@@ -6,6 +6,7 @@
              x:DataType="vm:SettingsViewModel">
     <UserControl.Resources>
         <views:PageTypeToBoolConverter x:Key="PageTypeToBoolConverter" />
+        <views:BoolToThemeConverter x:Key="BoolToThemeConverter" />
     </UserControl.Resources>
     <Grid Margin="8">
         <Grid.ColumnDefinitions>
@@ -20,25 +21,68 @@
             </ListBox.ItemTemplate>
         </ListBox>
         <Button Grid.Column="0" VerticalAlignment="Bottom" Margin="8,0,8,16" Content="Назад" Command="{Binding ShowFilesPageCommand}" HorizontalAlignment="Stretch"/>
-        <StackPanel Grid.Column="1" Margin="16,0,0,0">
-            <StackPanel IsVisible="{Binding SelectedCategory, Converter={StaticResource PageTypeToBoolConverter}, ConverterParameter=Main}">
-                <TextBlock Text="Тема, выход, смена пароля (заглушка)"/>
-            </StackPanel>
-            <StackPanel IsVisible="{Binding SelectedCategory, Converter={StaticResource PageTypeToBoolConverter}, ConverterParameter=Telegram}">
-                <TextBlock Text="Bot Token"/>
-                <TextBox Text="{Binding TelegramToken, Mode=TwoWay}"/>
-                <TextBlock Text="Channel ID"/>
-                <TextBox Text="{Binding ChannelId, Mode=TwoWay}"/>
-            </StackPanel>
-            <StackPanel IsVisible="{Binding SelectedCategory, Converter={StaticResource PageTypeToBoolConverter}, ConverterParameter=Sync}">
-                <CheckBox Content="Синхронизация включена" IsChecked="{Binding SyncEnabled, Mode=TwoWay}"/>
-            </StackPanel>
-            <StackPanel IsVisible="{Binding SelectedCategory, Converter={StaticResource PageTypeToBoolConverter}, ConverterParameter=Upload}">
-                <TextBlock Text="Мультипоточная загрузка, количество потоков, ограничение скорости (заглушка)"/>
-            </StackPanel>
-            <StackPanel IsVisible="{Binding SelectedCategory, Converter={StaticResource PageTypeToBoolConverter}, ConverterParameter=Download}">
-                <TextBlock Text="Параметры скачивания (заглушка)"/>
-            </StackPanel>
-        </StackPanel>
+        <Border Grid.Column="1" Margin="32,0,32,0" CornerRadius="16" Padding="32" Background="{Binding CardBackground}">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+                <StackPanel Grid.Row="0" VerticalAlignment="Center" HorizontalAlignment="Stretch" Spacing="16">
+                    <!-- Основные -->
+                    <StackPanel IsVisible="{Binding SelectedCategory, Converter={StaticResource PageTypeToBoolConverter}, ConverterParameter=Main}" Spacing="12">
+                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Stretch" Spacing="12" VerticalAlignment="Center">
+                            <TextBlock Text="Тема:" VerticalAlignment="Center"/>
+                            <ComboBox SelectedIndex="{Binding ThemeIndex, Mode=TwoWay}" Width="120">
+                                <ComboBoxItem Content="Светлая"/>
+                                <ComboBoxItem Content="Тёмная"/>
+                            </ComboBox>
+                            <Button Content="Применить" Command="{Binding ChangeThemeCommand}"/>
+                        </StackPanel>
+                        <Button Content="Сменить пароль" Command="{Binding ChangePasswordCommand}" HorizontalAlignment="Stretch" VerticalAlignment="Center"/>
+                        <Button Content="Выйти" Command="{Binding LogoutCommand}" HorizontalAlignment="Stretch" VerticalAlignment="Center"/>
+                    </StackPanel>
+                    <!-- Telegram -->
+                    <StackPanel IsVisible="{Binding SelectedCategory, Converter={StaticResource PageTypeToBoolConverter}, ConverterParameter=Telegram}" Spacing="12">
+                        <TextBlock Text="Bot Token"/>
+                        <TextBox Text="{Binding TelegramToken, Mode=TwoWay}"/>
+                        <TextBlock Text="Channel ID"/>
+                        <TextBox Text="{Binding ChannelId, Mode=TwoWay}"/>
+                        <Button Content="Сохранить" Command="{Binding SaveTelegramCommand}" HorizontalAlignment="Stretch" VerticalAlignment="Center"/>
+                    </StackPanel>
+                    <!-- Синхронизация -->
+                    <StackPanel IsVisible="{Binding SelectedCategory, Converter={StaticResource PageTypeToBoolConverter}, ConverterParameter=Sync}" Spacing="12">
+                        <CheckBox Content="Синхронизация включена" IsChecked="{Binding SyncEnabled, Mode=TwoWay}" HorizontalAlignment="Stretch" VerticalAlignment="Center"/>
+                        <Button Content="Сохранить" Command="{Binding SaveSyncCommand}" HorizontalAlignment="Stretch" VerticalAlignment="Center"/>
+                    </StackPanel>
+                    <!-- Загрузка -->
+                    <StackPanel IsVisible="{Binding SelectedCategory, Converter={StaticResource PageTypeToBoolConverter}, ConverterParameter=Upload}" Spacing="12" VerticalAlignment="Center">
+                        <CheckBox Content="Мультипоточная загрузка" IsChecked="{Binding MultiUploadEnabled, Mode=TwoWay}"/>
+                        <StackPanel Orientation="Horizontal" Spacing="8" VerticalAlignment="Center">
+                            <TextBlock Text="Потоков:" VerticalAlignment="Center"/>
+                            <Slider Minimum="1" Maximum="16" Value="{Binding UploadThreads, Mode=TwoWay}" Width="120" Margin="8,0"/>
+                            <TextBlock Text="{Binding UploadThreads}" Width="24" HorizontalAlignment="Center"/>
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal" Spacing="8" VerticalAlignment="Center">
+                            <TextBlock Text="Ограничение скорости (МБ/с):" VerticalAlignment="Center"/>
+                            <TextBox Text="{Binding UploadSpeedLimit, Mode=TwoWay}" Width="80"/>
+                        </StackPanel>
+                        <Button Content="Сохранить" Command="{Binding SaveUploadCommand}" HorizontalAlignment="Stretch" VerticalAlignment="Center"/>
+                    </StackPanel>
+                    <!-- Скачивание -->
+                    <StackPanel IsVisible="{Binding SelectedCategory, Converter={StaticResource PageTypeToBoolConverter}, ConverterParameter=Download}" Spacing="12" VerticalAlignment="Center">
+                        <CheckBox Content="Мультипоточное скачивание" IsChecked="{Binding MultiDownloadEnabled, Mode=TwoWay}"/>
+                        <StackPanel Orientation="Horizontal" Spacing="8" VerticalAlignment="Center">
+                            <TextBlock Text="Потоков:" VerticalAlignment="Center"/>
+                            <Slider Minimum="1" Maximum="16" Value="{Binding DownloadThreads, Mode=TwoWay}" Width="120" Margin="8,0"/>
+                            <TextBlock Text="{Binding DownloadThreads}" Width="24" HorizontalAlignment="Center"/>
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal" Spacing="8" VerticalAlignment="Center">
+                            <TextBlock Text="Ограничение скорости (МБ/с):" VerticalAlignment="Center"/>
+                            <TextBox Text="{Binding DownloadSpeedLimit, Mode=TwoWay}" Width="80"/>
+                        </StackPanel>
+                        <Button Content="Сохранить" Command="{Binding SaveDownloadCommand}" HorizontalAlignment="Stretch" VerticalAlignment="Center"/>
+                    </StackPanel>
+                </StackPanel>
+            </Grid>
+        </Border>
     </Grid>
 </UserControl>
