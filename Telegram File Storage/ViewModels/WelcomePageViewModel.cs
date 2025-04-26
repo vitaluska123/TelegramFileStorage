@@ -172,8 +172,8 @@ namespace TelegramFileStorage.ViewModels
         private void NextWelcome()
         {
             if (CurrentSlide != null)
-                _slideHistory.Push(CurrentSlide.Id);
-            // Переход только по NextSlide
+                if (CurrentSlide != null)
+                    _slideHistory.Push(CurrentSlide.Id);
             var nextId = CurrentSlide?.NextSlide;
             if (!string.IsNullOrEmpty(nextId) && _slideMap.TryGetValue(nextId, out var nextSlide))
             {
@@ -207,13 +207,13 @@ namespace TelegramFileStorage.ViewModels
                 _slideHistory.Push(CurrentSlide.Id);
             string? nextId = null;
             if (type == "login_start")
-                nextId = CurrentSlide.GetType().GetProperty("LoginSlideId")?.GetValue(CurrentSlide) as string ?? (CurrentSlide as dynamic)?.LoginSlideId;
+                nextId = CurrentSlide?.GetType().GetProperty("LoginSlideId")?.GetValue(CurrentSlide) as string ?? (CurrentSlide as dynamic)?.LoginSlideId;
             else if (type == "register_start")
-                nextId = CurrentSlide.GetType().GetProperty("RegisterSlideId")?.GetValue(CurrentSlide) as string ?? (CurrentSlide as dynamic)?.RegisterSlideId;
+                nextId = CurrentSlide?.GetType().GetProperty("RegisterSlideId")?.GetValue(CurrentSlide) as string ?? (CurrentSlide as dynamic)?.RegisterSlideId;
             else if (type == "nosync")
-                nextId = CurrentSlide.GetType().GetProperty("NoSyncSlideId")?.GetValue(CurrentSlide) as string ?? (CurrentSlide as dynamic)?.NoSyncSlideId;
+                nextId = CurrentSlide?.GetType().GetProperty("NoSyncSlideId")?.GetValue(CurrentSlide) as string ?? (CurrentSlide as dynamic)?.NoSyncSlideId;
             else
-                nextId = CurrentSlide.NextSlide;
+                nextId = CurrentSlide?.NextSlide;
             if (!string.IsNullOrEmpty(nextId) && _slideMap.TryGetValue(nextId, out var nextSlide))
             {
                 WelcomeIndex = Slides.IndexOf(nextSlide);
@@ -248,6 +248,7 @@ namespace TelegramFileStorage.ViewModels
             // Если нашли id — переходим
             if (!string.IsNullOrEmpty(explId) && _slideMap.TryGetValue(explId, out var explSlide))
             {
+                if (CurrentSlide != null)
                 _slideHistory.Push(CurrentSlide.Id);
                 WelcomeIndex = Slides.IndexOf(explSlide);
             }

@@ -29,14 +29,14 @@ namespace TelegramFileStorage.ViewModels
         }
         public SettingsCategory[] Categories { get; } = (SettingsCategory[])Enum.GetValues(typeof(SettingsCategory));
 
-        private string _telegramToken;
+        private string _telegramToken = string.Empty;
         public string TelegramToken
         {
             get => _telegramToken;
             set { _telegramToken = value; OnPropertyChanged(); }
         }
 
-        private string _channelId;
+        private string _channelId = string.Empty;
         public string ChannelId
         {
             get => _channelId;
@@ -118,7 +118,7 @@ namespace TelegramFileStorage.ViewModels
             set { _downloadSpeedLimit = value; OnPropertyChanged(); }
         }
 
-        private string _cardBackground;
+        private string _cardBackground = string.Empty;
         public string CardBackground
         {
             get => _cardBackground;
